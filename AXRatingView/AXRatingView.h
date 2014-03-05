@@ -18,4 +18,9 @@
 @property (nonatomic) float value;
 @property (nonatomic) float stepInterval;
 
+
+// Additions
+@property BOOL changeRating;
+@property BOOL createRating;
+
 @end

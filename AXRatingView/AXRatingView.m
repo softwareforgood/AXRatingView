@@ -76,7 +76,14 @@
 {
   _value = MIN(MAX(value, 0.0), _numberOfStar);
   [self setNeedsDisplay];
-  [self sendActionsForControlEvents:UIControlEventValueChanged];
+  
+  if (_changeRating) {
+      [self sendActionsForControlEvents:UIControlEventTouchDown];
+  }
+
+  if (_createRating) {
+      [self sendActionsForControlEvents:UIControlEventValueChanged];
+  }
 }
 
 - (void)setBaseColor:(UIColor *)baseColor
@@ -153,7 +160,26 @@
   if (_stepInterval != 0.0) {
     value = roundf(value / _stepInterval) * _stepInterval;
   }
-  [self setValue:value];
+  
+    [self setNeedsDisplay];
+    [self sendActionsForControlEvents:UIControlEventTouchUpInside];
+    
+    while (!self.createRating) {
+        break;
+    };
+    
+    
+    if (self.createRating) {
+        [self setValue:value];
+    } else {
+        
+        while (!self.changeRating) {
+            NSDate* timeout = [NSDate dateWithTimeIntervalSinceNow:1.f];
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeout];
+        }
+        
+        [self setValue:value];
+    }
 }
 
 @end
